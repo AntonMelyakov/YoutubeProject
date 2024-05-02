@@ -1,0 +1,21 @@
+.YoutubeList {
+    .videoDivsWrapper{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        .videoDiv {
+            width: 515px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+
+            iframe{
+                height: 300px;
+                width: 515px;
+            }
+        }
+    }
+}

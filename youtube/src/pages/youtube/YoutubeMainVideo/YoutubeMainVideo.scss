@@ -1,0 +1,18 @@
+.YoutubeMainVideo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 50px;
+    
+    .videoDiv {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        iframe{
+            width: 700px;
+            height: 390px;
+        }
+
+    }
+
+}
