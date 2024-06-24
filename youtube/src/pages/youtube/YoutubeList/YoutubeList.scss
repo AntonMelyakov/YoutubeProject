@@ -5,16 +5,23 @@
         align-items: center;
         flex-direction: column;
         .videoDiv {
-            width: 515px;
+            max-width: 480px;
             margin-top: 20px;
             margin-bottom: 20px;
             display: flex;
             justify-content: center;
-            flex-direction: column;
-
-            iframe{
-                height: 300px;
-                width: 515px;
+            flex-direction: column;           
+            &:hover{
+                h5{
+                    text-decoration: underline;
+                }
+                cursor: pointer; 
+            }
+            &.main{
+                h5{
+                    text-decoration: underline;
+                }
+                background-color: beige;
             }
         }
     }

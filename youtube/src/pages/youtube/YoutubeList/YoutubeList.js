@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { addList } from "../../../state/youtube/ytListSlice";
 import "./YoutubeList.scss";
+import { addVideo } from "../../../state/youtube/ytMainVideoSlice";
 
 function YoutubeList({ name }) {
   const videoListDummy = [
@@ -12,6 +15,10 @@ function YoutubeList({ name }) {
       timeWatched: 1000,
     },
   ];
+
+  const ytList = useSelector((state) => state.ytList.value);
+  const ytMainVideo = useSelector((state) => state.ytMainVideo.value);
+  const dispatch = useDispatch();
 
   const [videoList, setVideoList] = useState([]);
   const [videoLetter, setVideoLetter] = useState("a");
@@ -32,10 +39,26 @@ function YoutubeList({ name }) {
     return hours * 3600 + minutes * 60 + seconds;
   }
 
-  const setVideosWithInfo = async (videosList) => {
+  function calcPercentage(video) {
+    let percentage = parseInt(
+      (video.timeWatched /
+        YTDurationToSeconds(video.videoInfo.contentDetails.duration)) *
+        100
+    );
+    return (
+      <div className="w-100 bg-secondary bg-gradient">
+        <div
+          className=" bg-danger bg-gradient"
+          style={{ width: `${percentage + "%"}`, height: "10px" }}
+        ></div>
+      </div>
+    );
+  }
+
+  const setVideosWithInfo = async () => {
     let videoListWithParams = [];
 
-    for (const video of videosList) {
+    for (const video of ytList) {
       const asyncResult = await fetch(
         "https://youtube.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails&id=" +
           video.vidID +
@@ -61,21 +84,36 @@ function YoutubeList({ name }) {
   };
 
   useEffect(() => {
-    setVideosWithInfo(videoListDummy);
-  }, []);
+    setVideosWithInfo();
+  }, [ytList]);
 
   return (
     <div className="YoutubeList">
       {videoList && (
         <div className="videoDivsWrapper">
           {videoList.map((video) => (
-            <div className="videoDiv" key={video.videoInfo.id}>
-              <iframe
-                src={"https://www.youtube.com/embed/" + video.videoInfo.id}
-                allowFullScreen
-              ></iframe>
+            <div
+              className={`videoDiv ${
+                ytMainVideo.vidID === video.videoInfo.id ? "main" : ""
+              }`}
+              key={video.videoInfo.id}
+              onClick={() =>
+                dispatch(
+                  addVideo({
+                    vidID: video.videoInfo.id,
+                    timeWatched: video.timeWatched,
+                  })
+                )
+              }
+            >
+              <img
+                src={video.videoInfo.snippet.thumbnails.high.url}
+                height={video.videoInfo.snippet.thumbnails.high.height}
+                width={video.videoInfo.snippet.thumbnails.high.width}
+              />
               <h5>{video.videoInfo.snippet.title}</h5>
               <p>{video.videoInfo.snippet.channelTitle}</p>
+              {calcPercentage(video)}
             </div>
           ))}
         </div>

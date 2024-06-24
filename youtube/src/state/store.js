@@ -1,9 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
-import counterReducer from './counter/counterSlice'
+import ytListReducer from "./youtube/ytListSlice";
+import ytMainVideoReducer from "./youtube/ytMainVideoSlice";
 
 export const store = configureStore({
-    reducer: {
-        counter: counterReducer
-    }
+  reducer: {
+    ytList: ytListReducer,
+    ytMainVideo: ytMainVideoReducer,
+  },
 });
-

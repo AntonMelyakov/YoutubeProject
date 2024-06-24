@@ -1,7 +1,11 @@
 import React, { useState } from "react";
 import "./YoutubeForm.scss";
+import { useDispatch } from "react-redux";
+import { addList } from "../../../state/youtube/ytListSlice";
+import YouTube from "react-youtube";
 
 function YoutubeForm() {
+  const dispatch = useDispatch();
   const [formYTV, setFormYTV] = useState({
     youtubeVideo: "",
     errors: {},
@@ -13,12 +17,10 @@ function YoutubeForm() {
   }
 
   const handleChange = (event) => {
-    setFormYTV((prevState) => ({ ...prevState, errors: {} }));
-    let vidId = "";
-    setFormYTV((prevState) => ({
-      ...prevState,
+    setFormYTV({
       youtubeVideo: event.target.value,
-    }));
+      errors: {},
+    });
   };
 
   const validateForm = () => {
@@ -62,6 +64,11 @@ function YoutubeForm() {
         } else {
           savedList.push(newVideo);
           localStorage.setItem("ytWatchingVideos", JSON.stringify(savedList));
+          dispatch(addList(savedList));
+          setFormYTV((prevState) => ({
+            ...prevState,
+            youtubeVideo: "",
+          }));
         }
       } else {
         let newList = [newVideo];
